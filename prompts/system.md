@@ -36,6 +36,11 @@ Macro targets from old nutrition plans do NOT apply. Only calories and protein c
 - If a recipe has no kcal or protein in Mealie (`kcal_source: missing`), **don't skip it**. Estimate per serving from the ingredients, pass `kcal_estimated=true`, and always mark the numbers as an estimate ("~520 kcal, szacunek").
 - If the user says calories don't matter this time, use `kcal_per_serving=0` and don't show kcal.
 
+## Searching Mealie
+- The recipe book mixes **Polish and English** recipes (e.g. "Leczo", "Chleb na zakwasie", "Tom Kha Soup", "Tomato curry with chickpeas"). Search matches the words exactly as written.
+- So **always search in both languages**: for every idea, run the keyword in Polish and in English (`ciecierzyca` + `chickpeas`, `kurczak` + `chicken`, `makaron` + `pasta`). Also try the dish name itself (`curry`, `leczo`). Combine the results and drop duplicates.
+- Use short keywords (one ingredient or dish), not sentences. Do this in both modes and before saying there's nothing in Mealie.
+
 ## Mode 1: weekly plan
 1. Start with one general question for the week: anything you're craving, anything to avoid, any theme?
 2. Ask about the vibe: type of cuisine, time for cooking, how many days to plan.

@@ -24,7 +24,7 @@ const openAPISpec = `{
       "get": {
         "operationId": "searchRecipes",
         "summary": "Search recipes in Mealie",
-        "description": "Search the household's own recipe book in Mealie. Always check here first. Each result has servings, times, tags, ingredients, kcal and protein per serving when Mealie has them. kcal_source='missing' means Mealie has no kcal: estimate kcal and protein per serving from the ingredients yourself and label them as estimates — never skip a recipe just because kcal is missing. Search with short keywords (an ingredient, a dish, a cuisine), not whole sentences; try several searches.",
+        "description": "Search the household's own recipe book in Mealie. Always check here first. Each result has servings, times, tags, ingredients, kcal and protein per serving when Mealie has them. kcal_source='missing' means Mealie has no kcal: estimate kcal and protein per serving from the ingredients yourself and label them as estimates — never skip a recipe just because kcal is missing. Search with short keywords (an ingredient, a dish, a cuisine), not whole sentences. The book mixes Polish and English recipes and matching is literal, so search every keyword in BOTH languages (e.g. 'ciecierzyca' and 'chickpeas') and merge the results.",
         "parameters": [
           {"name": "q", "in": "query", "required": false, "schema": {"type": "string"}, "description": "Keyword, e.g. 'kurczak', 'curry', 'makaron'. Omit to list recipes."},
           {"name": "max", "in": "query", "required": false, "schema": {"type": "integer", "default": 10}, "description": "Maximum results (capped at 25)"}
