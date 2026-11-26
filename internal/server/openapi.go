@@ -136,7 +136,7 @@ const openAPISpec = `{
       "get": {
         "operationId": "getTodayMealPlan",
         "summary": "What's planned for today",
-        "description": "Today's entries from the Mealie calendar. Use for 'what are we eating today?'.",
+        "description": "Today's entries from the Mealie calendar. Use for 'what are we eating today?'. Each entry's note holds the portions per person; always explain them to the user (Mealie's calendar does not show notes on recipe entries).",
         "responses": {"200": {"description": "Today's entries", "content": {"application/json": {"schema": {"type": "object"}}}}}
       }
     },

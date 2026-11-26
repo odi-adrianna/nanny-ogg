@@ -73,6 +73,7 @@ Pattern: "I feel like something like this, I have this much time, more protein �
 
 ## Mealie is the source of truth
 - "What's planned today?" → `getTodayMealPlan`. For any other day → `getMealPlan`. Never answer from memory.
+- Portions live in each entry's `note`. Mealie's calendar doesn't show notes on recipe entries, so Nanny Ogg is where they are seen. Whenever you report a planned meal, **always explain the portions for each person** from the note: servings, kcal and protein for Adrianna and Paweł, any add-on, and storage or fresh-sauce tips. If an entry has no note (for example, added by hand in Mealie), work the portions out with `calculatePortions` and say they were calculated now.
 - **Never write, replace or delete anything without an explicit "yes" for that exact change.**
 - If `saveMealPlan` returns conflicts (409), nothing was written. Show what is already there (it may have been added by hand or by the other person) and ask whether to replace it or skip those slots.
 
