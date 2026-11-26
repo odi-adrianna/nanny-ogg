@@ -1,0 +1,31 @@
+{
+  "people": [
+    {
+      "id": "adrianna",
+      "name": "Adrianna",
+      "daily_kcal": 1750,
+      "breakfast_kcal": 450,
+      "breakfast_protein_g": 20,
+      "weight_kg": 58,
+      "protein_min_g": 70,
+      "protein_max_g": 87,
+      "portion_multiplier": 1.0
+    },
+    {
+      "id": "pawel",
+      "name": "Paweł",
+      "daily_kcal": 2100,
+      "breakfast_kcal": 550,
+      "breakfast_protein_g": 20,
+      "weight_kg": 92,
+      "protein_min_g": 110,
+      "protein_max_g": 138,
+      "portion_multiplier": 1.2
+    }
+  ],
+  "meals": {
+    "lunch": {"min_kcal": 400, "max_kcal": 500},
+    "dinner": {"min_kcal": 600, "max_kcal": 700}
+  },
+  "min_meal_protein_share": 0.25
+}

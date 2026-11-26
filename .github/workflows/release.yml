@@ -1,0 +1,82 @@
+name: Release container image to GHCR
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "cmd/**"
+      - "internal/**"
+      - "go.mod"
+      - "Dockerfile"
+      - ".github/workflows/release.yml"
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+      - run: go vet ./...
+      - run: go test ./...
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install crane
+        uses: imjasonh/setup-crane@v0.4
+
+      - name: Compute CalVer image tag (YYYY.WW.PATCH)
+        id: vars
+        run: |
+          set -euo pipefail
+          IMAGE=$(echo "${REGISTRY}/${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
+          # ISO week-numbering year (%G) + ISO week (%V) stay consistent and
+          # monotonic across the year boundary (unlike %Y+%V, which can collide).
+          YEAR=$(date -u +%G)
+          # 10# strips the leading zero from %V (06 -> 6) so the tag stays valid
+          # SemVer for weeks 1-9 (and avoids octal parse errors on 08/09).
+          WEEK=$(( 10#$(date -u +%V) ))
+          # Highest PATCH already published for this week, else start at 0.
+          # Immutable: every build gets a fresh, never-reused tag.
+          PATCH=$(crane ls "$IMAGE" 2>/dev/null \
+            | grep -E "^${YEAR}\.${WEEK}\.[0-9]+$" \
+            | sed -E 's/.*\.//' | sort -n | tail -1 || true)
+          if [ -z "${PATCH:-}" ]; then PATCH=0; else PATCH=$((PATCH + 1)); fi
+          echo "tag=${YEAR}.${WEEK}.${PATCH}" >> "$GITHUB_OUTPUT"
+          echo "sha_tag=git-$(git rev-parse --short=12 HEAD)" >> "$GITHUB_OUTPUT"
+          echo "Computed image tag: ${YEAR}.${WEEK}.${PATCH}"
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository }}:${{ steps.vars.outputs.tag }}
+            ${{ env.REGISTRY }}/${{ github.repository }}:${{ steps.vars.outputs.sha_tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
